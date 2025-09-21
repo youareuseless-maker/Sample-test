@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixMate - Handyman Services</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="splash-content">
+            <div class="logo">
+                <h1>FixMate</h1>
+            </div>
+            <div class="loading-indicator">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen -->
+    <div id="onboarding-screen" class="screen">
+        <div class="onboarding-content">
+            <div class="progress-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="slide-container">
+                <div class="slide active">
+                    <div class="slide-icon">📱</div>
+                    <h2>Request Services</h2>
+                    <p>Find and book trusted local service providers instantly</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon">📍</div>
+                    <h2>Track Progress</h2>
+                    <p>Monitor your service provider's arrival and progress in real-time</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon">⭐</div>
+                    <h2>Rate & Review</h2>
+                    <p>Share your experience and help others find the best providers</p>
+                </div>
+                <div class="slide">
+                    <div class="slide-icon">🚀</div>
+                    <h2>Get Started</h2>
+                    <p>Join thousands of satisfied customers today</p>
+                </div>
+            </div>
+            <div class="onboarding-controls">
+                <button class="btn btn--outline" id="skip-btn">Skip</button>
+                <button class="btn btn--primary" id="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="screen">
+        <div class="auth-content">
+            <div class="logo">
+                <h2>FixMate</h2>
+            </div>
+            <div class="auth-toggle">
+                <button class="toggle-btn active" data-mode="login">Login</button>
+                <button class="toggle-btn" data-mode="signup">Sign Up</button>
+            </div>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <div class="form-group" id="confirm-password-group" style="display: none;">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width" id="auth-submit-btn">Login</button>
+            </form>
+            <div class="auth-error" id="auth-error"></div>
+        </div>
+    </div>
+
+    <!-- Home Dashboard -->
+    <div id="home-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <h1>Welcome</h1>
+                <button class="profile-btn" id="profile-btn">
+                    <div class="profile-avatar"></div>
+                </button>
+            </div>
+        </header>
+        <div class="home-content">
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for services..." class="form-control">
+                </div>
+            </div>
+            <div class="services-section">
+                <h3>Services</h3>
+                <div class="service-grid" id="service-grid">
+                    <!-- Services will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="providers-section">
+                <h3>Featured Providers</h3>
+                <div class="provider-list" id="provider-list">
+                    <!-- Providers will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-screen="home">Home</button>
+            <button class="nav-btn" data-screen="services">Services</button>
+            <button class="nav-btn" data-screen="requests">Requests</button>
+            <button class="nav-btn" data-screen="profile">Profile</button>
+        </nav>
+    </div>
+
+    <!-- Service Categories Screen -->
+    <div id="services-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" id="back-btn">←</button>
+                <h1>Services</h1>
+                <div></div>
+            </div>
+        </header>
+        <div class="services-content">
+            <div class="service-categories" id="service-categories">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+        </div>
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-screen="home">Home</button>
+            <button class="nav-btn active" data-screen="services">Services</button>
+            <button class="nav-btn" data-screen="requests">Requests</button>
+            <button class="nav-btn" data-screen="profile">Profile</button>
+        </nav>
+    </div>
+
+    <!-- Service Request Screen -->
+    <div id="request-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" id="request-back-btn">←</button>
+                <h1>Create Request</h1>
+                <div></div>
+            </div>
+        </header>
+        <div class="request-content">
+            <form id="service-request-form">
+                <div class="form-group">
+                    <label class="form-label">Service Type</label>
+                    <select id="service-type" class="form-control" required>
+                        <option value="">Select a service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="service-description" class="form-control" rows="4" placeholder="Describe the issue or work needed..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preferred Date</label>
+                    <input type="date" id="service-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preferred Time</label>
+                    <select id="service-time" class="form-control" required>
+                        <option value="">Select time</option>
+                        <option value="morning">Morning (9AM - 12PM)</option>
+                        <option value="afternoon">Afternoon (12PM - 5PM)</option>
+                        <option value="evening">Evening (5PM - 8PM)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <textarea id="service-address" class="form-control" rows="3" placeholder="Enter your full address..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Requests Screen -->
+    <div id="requests-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <h1>My Requests</h1>
+                <button class="btn btn--primary btn--sm" id="new-request-btn">+ New</button>
+            </div>
+        </header>
+        <div class="requests-content">
+            <div class="request-list" id="request-list">
+                <!-- Requests will be populated by JavaScript -->
+            </div>
+        </div>
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-screen="home">Home</button>
+            <button class="nav-btn" data-screen="services">Services</button>
+            <button class="nav-btn active" data-screen="requests">Requests</button>
+            <button class="nav-btn" data-screen="profile">Profile</button>
+        </nav>
+    </div>
+
+    <!-- Request Details Screen -->
+    <div id="request-details-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" id="details-back-btn">←</button>
+                <h1>Request Details</h1>
+                <div></div>
+            </div>
+        </header>
+        <div class="request-details-content">
+            <div class="status-tracker">
+                <div class="status-steps" id="status-steps">
+                    <!-- Status steps will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="request-info" id="request-info">
+                <!-- Request info will be populated by JavaScript -->
+            </div>
+            <div class="provider-info" id="provider-info">
+                <!-- Provider info will be populated by JavaScript -->
+            </div>
+            <div class="actions">
+                <button class="btn btn--outline btn--full-width" id="chat-btn">Chat with Provider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chat-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <button class="back-btn" id="chat-back-btn">←</button>
+                <h1>Chat</h1>
+                <div></div>
+            </div>
+        </header>
+        <div class="chat-content">
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be populated by JavaScript -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="message-input" class="form-control" placeholder="Type a message...">
+                <button class="btn btn--primary" id="send-btn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Screen -->
+    <div id="profile-screen" class="screen">
+        <header class="app-header">
+            <div class="header-content">
+                <h1>Profile</h1>
+                <button class="btn btn--outline btn--sm" id="logout-btn">Logout</button>
+            </div>
+        </header>
+        <div class="profile-content">
+            <div class="profile-header">
+                <div class="profile-avatar large"></div>
+                <h2 id="profile-name">User Name</h2>
+                <p id="profile-email">user@example.com</p>
+            </div>
+            <div class="profile-menu">
+                <div class="menu-item">
+                    <span>Personal Information</span>
+                    <span>→</span>
+                </div>
+                <div class="menu-item">
+                    <span>Payment Methods</span>
+                    <span>→</span>
+                </div>
+                <div class="menu-item">
+                    <span>Notifications</span>
+                    <span>→</span>
+                </div>
+                <div class="menu-item">
+                    <span>Help & Support</span>
+                    <span>→</span>
+                </div>
+                <div class="menu-item">
+                    <span>About</span>
+                    <span>→</span>
+                </div>
+            </div>
+        </div>
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-screen="home">Home</button>
+            <button class="nav-btn" data-screen="services">Services</button>
+            <button class="nav-btn" data-screen="requests">Requests</button>
+            <button class="nav-btn active" data-screen="profile">Profile</button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
